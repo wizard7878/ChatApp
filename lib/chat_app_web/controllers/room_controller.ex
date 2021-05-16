@@ -49,6 +49,12 @@ defmodule ChatAppWeb.RoomController do
     end
   end
 
-
+  def delete(conn , %{"id" => id}) do
+    IO.inspect("ID:::: #{id}")
+    {:ok , _} = Talk.delete_room(id)
+    conn
+    |> put_flash(:info, "Room deleted!")
+    |> redirect(to: Routes.room_path(conn , :index))
+  end
 
 end

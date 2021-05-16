@@ -16,4 +16,14 @@ defmodule ChatApp.Talk do
     Repo.get!(Room, id)
   end
 
+  def update_room(%Room{} = room , attrs) do
+    room
+    |> Room.changeset(attrs)
+    |> Repo.update()
+  end
+
+  def change_room(%Room{} = room) do
+    Room.changeset(room , %{})
+  end
+
 end

@@ -11,4 +11,16 @@ defmodule ChatApp.Accounts do
         {:error, :unauthorized}
     end
   end
+
+  def user_signed_in?(conn) do
+    !!current_user(conn)
+  end
+
+  def current_user(conn) do
+    user_id = Plug.Conn.get_session(conn, :current_user_id)
+    if user_id do
+      Repo.get(User, user_id)
+    end
+  end
+
 end

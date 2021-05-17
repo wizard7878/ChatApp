@@ -14,6 +14,11 @@
       <h3 class="my-0 mr-md-auto font-weight-normal">
         <%= link "Chat App",to: Routes.room_path(@conn , :index), class: "navbar-brand text-light" %>
       </h3>
+      <%= if ChatApp.Accounts.user_signed_in?(@conn) do %>
+      <nav style="color: white;">
+        Signed in as: <strong><%= ChatApp.Accounts.current_user(@conn).username %></strong>
+      </nav>
+      <% end %>
     </div>
     <br><br>
     <main role="main" class="container">

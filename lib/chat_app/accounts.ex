@@ -23,4 +23,8 @@ defmodule ChatApp.Accounts do
     end
   end
 
+  def sign_out(conn) do
+    Plug.Conn.configure_session(conn , drop: true)
+  end
+
 end

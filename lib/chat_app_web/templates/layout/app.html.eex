@@ -18,6 +18,7 @@
       <nav style="color: white;">
         Signed in as: <strong><%= ChatApp.Accounts.current_user(@conn).username %></strong>
       </nav>
+      <%= link "Sign Out", to: Routes.session_path(@conn, :delete), method: :delete , class: "btn btn-danger" %>
       <% end %>
     </div>
     <br><br>

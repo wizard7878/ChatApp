@@ -20,6 +20,10 @@
       </nav>
       <%= link "Sign Out", to: Routes.session_path(@conn, :delete), method: :delete , class: "btn btn-danger" %>
       <% end %>
+
+      <%= if !ChatApp.Accounts.user_signed_in?(@conn) do %>
+      <%= link "Sign Up", to: Routes.registartion_path(@conn,:new) , class: "btn btn-outline-primary" %>
+      <% end %>
     </div>
     <br><br>
     <main role="main" class="container">

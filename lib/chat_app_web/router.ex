@@ -25,6 +25,7 @@ defmodule ChatAppWeb.Router do
     delete "rooms/:id" , RoomController , :delete
 
     resources "/sessions" , SessionController , only: [:new, :create]
+    resources "/registartion" , RegistartionController, only: [:new, :create]
     delete "/sign_out" , SessionController , :delete
   end
 

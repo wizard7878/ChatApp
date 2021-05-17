@@ -1,0 +1,35 @@
+<div class="auth-form-warpper">
+    <%= form_for @changeset, Routes.registartion_path(@conn, :create), [as: :registartion, class: "form-sign-in"], fn f -> %>
+        <div class="text-center">
+            <h1>Sign Up</h1>
+        </div>
+
+        <div class="form-group">
+            <%= label f, :username , class: "control-label" %>
+            <%= text_input f, :username,  class: "form-control", autofocus: true %>
+            <%= error_tag f, :username %>
+        </div>
+
+        <div class="form-group">
+            <%= label f, :email , class: "control-label" %>
+            <%= text_input f, :email,  class: "form-control", autofocus: true %>
+            <%= error_tag f, :email %>
+        </div>
+        <div class="form-group">
+            <%= label f, :password_hash, class: "control-label" %>
+            <%= text_input f, :password_hash, class: "form-control" , required: true  %>
+            <%= error_tag f, :password %>
+        </div>
+
+        <div class="form-group">
+            <%= label f, :password_confirmation, class: "control-label" %>
+            <%= text_input f, :password_confirmation, class: "form-control" , required: true, autofocus: true %>
+            <%= error_tag f, :password_confirmation %>
+        </div>
+
+        <div class="form-group">
+            <%= submit "Sign In", class: "btn btn-primary" %>
+        </div>
+
+    <% end %>
+</div>

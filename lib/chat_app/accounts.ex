@@ -27,4 +27,9 @@ defmodule ChatApp.Accounts do
     Plug.Conn.configure_session(conn , drop: true)
   end
 
+  def register(attrs) do
+    User.registration_changeset(%User{} , attrs)
+    |> Repo.insert()
+  end
+
 end

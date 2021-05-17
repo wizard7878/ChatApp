@@ -4,7 +4,8 @@ defmodule ChatAppWeb.RoomController do
   alias ChatApp.Repo
   alias ChatApp.Talk
 
-  plug ChatAppWeb.Plugs.AuthUser when action in [:new , :create, :show, :edit , :update]
+  plug ChatAppWeb.Plugs.AuthUser when action not in [:index]
+  plug :authorized_user when action in [:edit , :delete , :update]
 
   def index(conn , _params) do
     rooms = Talk.list_rooms()
@@ -17,7 +18,7 @@ defmodule ChatAppWeb.RoomController do
   end
 
   def create(conn , %{"room" => room_params}) do
-    case Talk.create_room(room_params) do
+    case Talk.create_room(conn.assigns.current_user,room_params) do
       {:ok , room} ->
         conn
         |> put_flash(:info, "Room Created!")
@@ -70,4 +71,17 @@ defmodule ChatAppWeb.RoomController do
 #    end
 #  end
 
+
+  defp authorized_user(conn , _params) do
+    %{params: %{"id" => id}} = conn
+    room = Repo.get(Room,id)
+    if conn.assigns.current_user.id == room.user_id do
+      conn
+    else
+      conn
+      |> put_flash(:error , "sorry only admin can change")
+      |> redirect(to: Routes.room_path(conn , :show , room.id))
+      |> halt()
+    end
+  end
 end

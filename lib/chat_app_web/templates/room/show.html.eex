@@ -8,13 +8,31 @@
     <%= link "Delete", to: Routes.room_path(@conn, :delete, @room), method: :delete, data: [confirm: "Do you really want to delete?"] , class: "btn btn-danger" %>
 </div>
 
-<ul class="list-group mt-5" id="display"></ul>
 
-<form class="input-group mt-3" id="message-form">
-    <input style="font-size: larger" type="text" class="form-control" id="message-body" placeholder="Input your message">
-    <div class="input-group-append">
-        <button style="font-size: larger" type="submit"  class="btn btn-outline-success" id="message-button">Send</button>
+<div class = "row">
+    <div class= "col-8">
+        <ul class="list-group mt-5" id="display"></ul>
+        <form class="input-group mt-3" id="message-form">
+            <input style="font-size: larger" type="text" class="form-control" id="message-body" placeholder="Input your message">
+            <div class="input-group-append">
+                <button style="font-size: larger" type="submit"  class="btn btn-outline-success" id="message-button">Send</button>
+            </div>
+        </form>
     </div>
-</form>
 
+
+
+<div class="col-4">
+    <div class="card">
+        <div class="card-header text-white bg-secondary">
+            Users Online:
+        </div>
+        <div class="card-body">
+            <div id="users-online">
+
+            </div>
+        </div>
+    </div>
+</div>
+</div>
 <script>window.roomId = "<%= @room.id %>"</script>

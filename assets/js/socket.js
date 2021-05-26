@@ -6,12 +6,17 @@
 //
 // Pass the token on params as below. Or remove it
 // from the params if you are not using authentication.
-import {Socket} from "phoenix"
+import {Socket,Presence} from "phoenix"
 
 let socket = new Socket("/socket", {params: {token: window.userToken}})
 socket.connect()
 
 let room_id = window.roomId
+let presences = {}
+const timeout = 1000
+var typeingTimer
+let userTyping = false
+
 if(room_id){
     let channel = socket.channel(`room:${room_id}`, {})
     channel.join()
@@ -20,6 +25,18 @@ if(room_id){
 
     channel.on(`room:${room_id}:new_message`, (message) => {
         displayMessage(message)
+    })
+
+    channel.on("presence_state" , state => {
+        presences = Presence.syncState(presences , state)
+        console.log(presences)
+        displayUsers(presences)
+    })
+
+    channel.on("presence_diff" , diff => {
+        presences = Presence.syncDiff(presences,diff)
+        console.log(presences)
+        displayUsers(presences)
     })
 
 
@@ -31,6 +48,34 @@ if(room_id){
         input.value = ""
     })
 
+    document.querySelector("#message-body").addEventListener('keydown',() => {
+        userStartsTyping()
+        clearTimeout(typeingTimer)
+    })
+
+    document.querySelector("#message-body").addEventListener('keyup',() => {
+        clearTimeout(typeingTimer)
+        typeingTimer = setTimeout(userStopTyping, timeout)
+    })
+
+    const userStartsTyping = () => {
+        if(userTyping){
+            return
+        }
+        userTyping = true
+        channel.push('user:typing', {
+            typing: true
+        })
+    }
+
+    const userStopTyping = () => {
+        clearTimeout(typeingTimer)
+        userTyping = false
+
+        channel.push('user:typing' , {
+            typing: false
+        })
+    }
     const displayMessage = (msg) => {
         console.log(msg)
         let template = `
@@ -39,6 +84,24 @@ if(room_id){
              </li>`
 
         document.querySelector("#display").innerHTML += template
+    }
+
+    const displayUsers = (presences) => {
+        let usersOnline = Presence.list(presences , (_id, {
+            metas:[
+                user, ... rest
+            ]
+        }) => {
+            var typingTemplate = ``
+            if (user.typing){
+                typingTemplate = `<i> Typing ... </i>`
+            }
+            return `
+                 <div style="width:10px; height:10px;" class="badge bg-success">  </div> ${user.username} ${typingTemplate}
+                 <br/>
+            `
+        }).join("")
+        document.querySelector("#users-online").innerHTML = usersOnline
     }
 }
 
